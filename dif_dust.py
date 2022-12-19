@@ -1,3 +1,5 @@
+#example with different dust
+
 import numpy as np
 from astropy import log as logger
 import six
@@ -22,12 +24,12 @@ class PowerLawEnvelope():
     env = m.add_power_law_envelope()
     env.mass = (2.0e-4) * msun          # Envelope mass
     env.rmin = 34 * au                  # Inner radius, 4au regular abg, 34au agb detached shell
-    env.rmax = 80 * au          # Outer radius #46 (antes)
-    env.power = -2                 # Radial power
+    env.rmax = 80 * au          # Outer radius #46 (before)
+    env.power = -2                 # Radial power (rho dependence with radius rho~r^-2)
     #env.rho_0 = 2 only needed if mass is not given
     env.r_0 = 34 * au #34 au for detached shell agb
-    #env.dust = 'kmh_lite.hdf5' 
-    env.dust = 'Cstar_DustProperties.hdf5'
+    #env.dust = 'kmh_lite.hdf5' #dust file
+    env.dust = 'Cstar_DustProperties.hdf5' #dust file
 
     # Use raytracing to improve s/n of thermal/source emission
     m.set_raytracing(True)
@@ -47,14 +49,15 @@ class PowerLawEnvelope():
 
     # Set number of photons
     m.set_n_photons(initial=1e3, imaging=1e4,
-                raytracing_sources=1e2, raytracing_dust=1e4) #imaging ~7hrs
+                raytracing_sources=1e2, raytracing_dust=1e4) #imaging
     #m.set_n_photons(initial=1e5, imaging=1e6,
-                #raytracing_sources=1e4, raytracing_dust=1e6)
+                #raytracing_sources=1e4, raytracing_dust=1e6) #add more phothons if the shell is optically thin
 
     # Set number of temperature iterations
     m.set_n_initial_iterations(5)
     m.set_convergence(True, percentile=99.0, absolute=2.0, relative=1.1)
 
     # Write out file
-    m.write('sed_rho-2_Cdust2.rtin')
-    m.run('sed_rho-2_Cdust2.rtout', mpi=True)
+    m.write('sed_rho-2_Cdust2.rtin') 
+    m.run('sed_rho-2_Cdust2.rtout', 
+          mpi=True) #name of the output file, to extract images and sed
