@@ -7,7 +7,7 @@ except:
     from astropy import constants
     rsun = (1 * units.Rsun).to('cm').value
     au = (1 * units.au).to('cm').value
-    msun = (1 * units.msun).to('g').value
+    msun = (1 * units.Msun).to('g').value
     sigma = constants.sigma_sb.to('erg / (s K4 cm2)').value
     pc = (1 * units.pc).to('cm').value
     lsun = (1 * units.Lsun).to('erg / s').value
