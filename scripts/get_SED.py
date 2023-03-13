@@ -1,7 +1,16 @@
 from astropy.table import Table, join
 from astropy import units
 import numpy as np
-from hyperion.util.constants import rsun, au, msun, sigma, pc, lsun
+try:
+    from hyperion.util.constants import rsun, au, msun, sigma, pc, lsun
+except:
+    from astropy import constants
+    rsun = (1 * units.Rsun).to('cm').value
+    au = (1 * units.au).to('cm').value
+    msun = (1 * units.msun).to('g').value
+    sigma = constants.sigma_sb.to('erg / (s K4 cm2)').value
+    pc = (1 * units.pc).to('cm').value
+    lsun = (1 * units.Lsun).to('erg / s').value
 
 def get_stellar_params(model = None, dist = 260 * units.pc):
     """
