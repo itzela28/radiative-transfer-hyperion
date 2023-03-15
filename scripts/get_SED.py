@@ -126,6 +126,8 @@ def get_SED(IRASPSC = ['10329-3918', '03374+6229']):
         k2 = np.nonzero(np.isin(phot_table['IRASPSC'], IRASPSC))[0]
         sed['flux'][k1] = f[k2, :]
         sed['flux_err'][k1] = df[k2, :]
+        sed['flux'].unit = units.Jy
+        sed['flux_err'].unit = units.Jy
         sed.meta['filterName'] = phot_table.meta['filterName']
         sed.meta['lpivot'] = phot_table.meta['lpivot']
 
