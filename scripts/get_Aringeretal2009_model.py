@@ -153,7 +153,7 @@ def get_logg(t):
 
     return logg
 
-def table2_1():
+def get_model_params():
     """
     Create an astropy Table object containing the stellar parameters from
         Table 2.1 in Itzel's thesis
