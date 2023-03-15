@@ -21,8 +21,8 @@ def get_VizieR_table():
     r = Vizier_service.search(query).to_table()
     return r
 
-def get_spec(t = None, ModelNum = None, Teff = 3000.0, logg = 0.0, Mass = 1.0, Z = 1.0, \
-             C2O = 2.0, xi = 2.5, SpFileName = None, Dkpc = None):
+def get_model_spec(t = None, ModelNum = None, Teff = 3000.0, logg = 0.0, Mass = 1.0, Z = 1.0, \
+                   C2O = 2.0, xi = 2.5, SpFileName = None, Dkpc = None):
     """
     Retrieve the model spectrum for the specified set of parameters. If
         no model found for the exact combination, find one with parameters
