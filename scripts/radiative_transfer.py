@@ -28,9 +28,7 @@ class PowerLawEnvelope():
     '10350-1307',
     '20141-2128',
     '12427+4542'])
-    data['flux'].unit = units.Jy
-    data['flux_err'].unit = units.Jy
-
+    
     spec = get_spec(table2_1(),
         Dkpc=[0.532,0.266,0.275,0.268,0.208,0.291,0.321],C2O=[1.30,1.34,1.07,1.44,1.043,1.10,1.087])
 
