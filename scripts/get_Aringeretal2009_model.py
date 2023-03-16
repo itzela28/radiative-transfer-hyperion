@@ -167,6 +167,10 @@ def get_model_params():
     Teff = [2695.0, 2625.0, 3000.0, 2600.0, 2800.0, 2200.0, 2200.0]#, 2200.0]
     Mass = [3.6, 3.6, 2.0, 2.0, 2.4, 3.2, 2.8]#, 3.6]
     C2O = [1.30,1.34,1.07,1.44,1.043,1.10,1.087]
+    Dkpc = [0.532, 0.266, 0.275, 0.268, 0.208, 0.291, 0.321]
+    theta = [7.3, 19.5, 22, 42.5, 110, 94, 190]
+    Rs = (np.array(Dkpc) * units.kpc * np.array(theta) * units.arcsec.to('radian')).to('pc')
+    dR = np.array([0.0036, 0.0282, 0.0013, 0.015, 0.0123, 0.016, 0.0648]) * units.pc
 
     t = Table([ID, IRASPSC, Lbol_Kastner, Lbol_bib, Teff, Mass, C2O], \
               names = ('ID', 'IRASPSC', 'Lbol_Kastner', 'Lbol_bib', 'Teff', 'Mass', 'C/O'), \
@@ -180,5 +184,7 @@ def get_model_params():
     t['logg_Kastner'].unit = ''
     t['logg'] = t['logg_Kastner'] # Just pick one
     t['logg'].unit = ''
+    t['Rmin'] = Rs - dR / 2.0
+    t['Rmax'] = Rs + dR / 2.0
 
     return t
