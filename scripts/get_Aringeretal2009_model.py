@@ -169,7 +169,7 @@ def get_model_params():
     C2O = [1.30,1.34,1.07,1.44,1.043,1.10,1.087]
 
     t = Table([ID, IRASPSC, Lbol_Kastner, Lbol_bib, Teff, Mass, C2O], \
-              names = ('ID', 'IRASPSC', 'Lbol_Kastner', 'Lbol_bib', 'Teff', 'Mass', C2O), \
+              names = ('ID', 'IRASPSC', 'Lbol_Kastner', 'Lbol_bib', 'Teff', 'Mass', 'C/O'), \
               units = ('', '', 'L_sun', 'L_sun', 'K', 'M_sun', ''))
 
     t['Lbol'] = t['Lbol_Kastner']
