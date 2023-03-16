@@ -166,10 +166,11 @@ def get_model_params():
     Lbol_bib = [13900.0, 7700.0, 6000.0, 6060.0, 2960.0, 8500.0, 9100.0]#, 9100.0]
     Teff = [2695.0, 2625.0, 3000.0, 2600.0, 2800.0, 2200.0, 2200.0]#, 2200.0]
     Mass = [3.6, 3.6, 2.0, 2.0, 2.4, 3.2, 2.8]#, 3.6]
+    C2O = [1.30,1.34,1.07,1.44,1.043,1.10,1.087]
 
-    t = Table([ID, IRASPSC, Lbol_Kastner, Lbol_bib, Teff, Mass], \
-              names = ('ID', 'IRASPSC', 'Lbol_Kastner', 'Lbol_bib', 'Teff', 'Mass'), \
-              units = ('', '', 'L_sun', 'L_sun', 'K', 'M_sun'))
+    t = Table([ID, IRASPSC, Lbol_Kastner, Lbol_bib, Teff, Mass, C2O], \
+              names = ('ID', 'IRASPSC', 'Lbol_Kastner', 'Lbol_bib', 'Teff', 'Mass', C2O), \
+              units = ('', '', 'L_sun', 'L_sun', 'K', 'M_sun', ''))
 
     t['Lbol'] = t['Lbol_Kastner']
     t['logg_Kastner'] = get_logg(t)
