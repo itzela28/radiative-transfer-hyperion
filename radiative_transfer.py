@@ -17,13 +17,12 @@ d = [532, 266, 275, 268, 208, 291, 321]
 i = 0 #number of the source
 j = 0 #position of the value in opt_depth
 dust_file_name="Cstar_DustProperties.hdf5"
-#dust_file1=h5py.File(dust_file_name, "r+")
 
 #dust_file2=h5py.File("AmC_Rouleau1991_plus_SiC_Pegourie1988.hdf5", "r+")
 
 
 def opacity(ref_wave, dust_file_name):
-    f=h5py.File(dust_file_name, "r+")
+    f=h5py.File(dust_file_name, "r")
     albedo=f['optical_properties']['albedo']
     chi=f['optical_properties']['chi']
     k_sca=chi*albedo
@@ -46,7 +45,7 @@ def extrap_opt_c(in_dust_file, min_wave, max_wave, out_dust_file):
 
 
 
-def extrap(wave, fspec, trace):
+def extrap(wave, fspec, trace, output='photosphere_extrap.vot'):
     """
     Extrapolate the stellar spectrum as follows:
     1. Compute the stellar continuum using fspec and trace
@@ -68,7 +67,12 @@ def extrap(wave, fspec, trace):
     coeff1=np.polyfit(w_filter1, fcont_filter1, 2) 
     polynom1=np.poly1d(coeff1)
     fcont_fit1=polynom1(w_filter1)
-    w_pred1 = np.geomspace(0.2, 0.4447, 20)
+    f=h5py.File("Cstar_DustProperties.hdf5", "r+")
+    frec_dust=f['optical_properties']['nu']*units.Hz
+    wave_dust=frec_dust.to('um',equivalencies=units.spectral())
+    w_min=wave_dust.min()
+    w_max=wave_dust.max()
+    w_pred1 = np.geomspace(w_min.value*1.05, 0.4447, 20)
     fcont_pred1= 10**(polynom1(np.log10(w_pred1)))
     trace1=np.ones(20)*trace[0]
 
@@ -78,7 +82,7 @@ def extrap(wave, fspec, trace):
     coeff2=np.polyfit(w_filter2, fcont_filter2, 1) 
     polynom2=np.poly1d(coeff2)
     fcont_fit2=polynom2(w_filter2)
-    w_pred2 = np.geomspace(24, 1000, 20)
+    w_pred2 = np.geomspace(24, w_max.value*0.95, 20)
     fcont_pred2 = 10**(polynom2(np.log10(w_pred2)))
     trace2=np.ones(20)
 
@@ -87,6 +91,9 @@ def extrap(wave, fspec, trace):
     fcont_ex=np.append(fcont_pred1, np.append(fcont, fcont_pred2))
     tr_ex=np.append(trace1, np.append(trace,trace2))
     fspec_ex=fcont_ex*tr_ex
+
+    t = Table([w_ex, fspec_ex, tr_ex], names=('wave','spec','trace'))
+    t.write(output, format='votable', overwrite=True)
     return w_ex, fspec_ex, tr_ex
 
 
@@ -116,6 +123,7 @@ class PowerLawEnvelope():
     wave1 = spec['wspec'][i]
 
     wave_ex, fspec_ex, trace_ex = extrap(wave1, fspec1, trace1)
+
     """
     wave2, chi1 = opacity(ref_wave, dust_file_name)
     plt.plot(wave2, chi1, 'r-')
@@ -140,7 +148,7 @@ class PowerLawEnvelope():
 
     #extrapolate opt. constants onto the wave grid of photospheric spectra
     dust_extrap_file_name=dust_file_name[:-5] + '_extrap.hdf5'
-    extrap_opt_c(dust_file_name, wave[0], wave[-1], dust_extrap_file_name)
+    extrap_opt_c(dust_file_name, wave[0]*0.9, wave[-1]*1.05, dust_extrap_file_name)
     # Add an envelope
     close_wave, chi_cl = opacity(ref_wave, dust_extrap_file_name)    
     
@@ -166,7 +174,7 @@ class PowerLawEnvelope():
     m.set_spherical_polar_grid_auto(100, 1, 1)
 
     # Set up SED for 10 viewing angles
-    waverange = np.array([0.3, 1500.]) * units.micron
+    waverange = np.array([wave[0], wave[-1]]) * units.micron
     sed = m.add_peeled_images(sed=True, image=False)
     sed.set_uncertainties(uncertainties=True)
     sed.set_viewing_angles(np.linspace(0., 90., 10), np.repeat(45., 10))
