@@ -1,0 +1,7 @@
+plot_phot.py
+File to get SEDs with photometric data from NESS and photospheric model spectrum obtained from GRAMS.
+Photometric data is obtained by calling the get_SED() module of the get_SED.py file. 
+This file uses the get_lams_and_fluxes() module to get the NESS SEDs, from the NESS_SEDs_good.cvs and filters.vot files.
+The get_spec() module of the get_Aringeretal2009_model.py script is used to obtain the photosphere spectral model.
+
+In the plot_phot.py file, i is iterated to obtain the data from one of the seven sources, from the 'data' array.
